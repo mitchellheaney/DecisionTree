@@ -1,3 +1,14 @@
-from sklearn import model_selection
+from sklearn import datasets
+import numpy as np
 
-model_selection.train_test_split()
+def main():
+    data = datasets.load_diabetes();
+    print(type(data))
+
+    npData = np.genfromtxt('diabetes.csv', delimiter=',', dtype=str)
+    print()
+
+    print(npData)
+
+if __name__ == "__main__":
+    main()
