@@ -47,7 +47,7 @@ def main():
     numFeat = min(int(givenFeatNum), len(data[0]))
     
     clft = DecisionTree(numFeat, max_depth=max_depth)
-    
+    clft.__fit__(dataTrain, targetTrain)
     
 
 if __name__ == "__main__":

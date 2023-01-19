@@ -1,4 +1,5 @@
 from random import randint
+import numpy as np
 
 def splitTrainTest(*args, splitSize):
     
@@ -17,7 +18,8 @@ def splitTrainTest(*args, splitSize):
                 accessedIdx.append(idx)
                 i += 1
                 
-        test =  [sets[idx] for idx in range(0, len(sets) - 1) if idx not in accessedIdx]
+        train = np.array(train)
+        test =  np.array([sets[idx] for idx in range(0, len(sets) - 1) if idx not in accessedIdx])
         newData.append(train)
         newData.append(test)
     return newData
