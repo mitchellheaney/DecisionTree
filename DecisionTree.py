@@ -17,25 +17,26 @@ def main():
         sys.exit(0)
         
     # split data from file into respective feature data and target data
-    rawData = np.genfromtxt(filename, delimiter=',', dtype=str)
-    targetIdx = np.where(rawData[0] == targetVar)
+    fileData = np.genfromtxt(filename, delimiter=',', dtype=str)
+    targetIdx = np.where(fileData[0] == targetVar)
+    rawData = fileData[1:, :]
     data = np.delete(rawData, targetIdx, 1)
-    target = np.expand_dims(np.squeeze(rawData[:,targetIdx]), axis=0)                  # NOTE: MAY HAVE TO CHANGE LATER, DATA AND TARGET ARE BOTH 2D ARRAYS FOR SPLITTESTTRAIN EASE
+    target = np.squeeze(rawData[:,targetIdx])                 # NOTE: data is now 2d array, target is single array all same length
         
     # run checks for target variable existence
     try: 
-        targetCheck = np.where(rawData[0] == targetVar)
+        targetCheck = np.where(fileData[0] == targetVar)
         assert(len(targetCheck[0]) == 1)
     except AssertionError:
         print("\n\t Entered target variable not found.")
         sys.exit(0)
         
     # split data and targetData into train and test subsets
-    dataTrain, dataTest, targetTrain, targetTest = splitTrainTest(data, target, trainSize=0.75)
+    dataTrain, dataTest, targetTrain, targetTest = splitTrainTest(data, target, splitSize=0.75)
     
     # run checks for number of feature columns in file
     numFeat = min(int(givenFeatNum), len(data[0]))
-    print(numFeat)
+    
     
     
 
