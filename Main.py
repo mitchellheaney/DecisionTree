@@ -46,9 +46,16 @@ def main():
     # run checks for number of feature columns in file
     numFeat = min(int(givenFeatNum), len(data[0]))
     
-    clft = DecisionTree(numFeat, max_depth=max_depth)
-    clft.__fit__(dataTrain, targetTrain)
-    
+    clft = DecisionTree(numFeat, max_depth)
+    root = clft.__fit__(dataTrain, targetTrain)
+    #clft.__print_d_tree__(root)
+    predictions = clft.predict(dataTest)
+    acc = accuracy(targetTest, predictions)
+    print(acc)
+
+
+def accuracy(y_test, y_pred):
+    return np.sum(y_test == y_pred) / len(y_test)
 
 if __name__ == "__main__":
     main()

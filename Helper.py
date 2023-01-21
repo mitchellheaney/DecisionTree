@@ -19,7 +19,7 @@ def splitTrainTest(*args, splitSize):
                 i += 1
                 
         train = np.array(train)
-        test =  np.array([sets[idx] for idx in range(0, len(sets) - 1) if idx not in accessedIdx])
+        test =  np.array([sets[idx] for idx in range(0, len(sets)) if idx not in accessedIdx])
         newData.append(train)
         newData.append(test)
     return newData
