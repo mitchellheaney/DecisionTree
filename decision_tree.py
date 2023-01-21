@@ -1,11 +1,23 @@
 import numpy as np
-from node import Node
 from collections import Counter
 import math
+from helper import __change_numerical__
+
+class Node:
+    
+    def __init__(self, feature=None, thres_quant=None, left=None, right=None, *, leaf_val=None):
+        self.feature = feature
+        self.thres_quant = thres_quant
+        self.left = left
+        self.right = right
+        self.leaf_val = leaf_val
+        
+    def __is_leaf__(self):
+        return self.leaf_val is not None
 
 class DecisionTree:
     
-    def __init__(self, num_feats, max_depth, min_sample_split=2):
+    def __init__(self, num_feats=None, max_depth=100, min_sample_split=2):
         self.num_feats = num_feats
         self.max_depth = max_depth
         self.min_sample_split = min_sample_split
@@ -18,42 +30,25 @@ class DecisionTree:
     """
     def __fit__(self, data, target):
         
-        self.root = self.__grow_tree__(data, self.__change_numerical__(target))
+        self.root = self.__grow_tree__(data, __change_numerical__(target))
         return self.root
-
-
-    """ 
-    This function changes the target column into binary or numerical
-    indicators to represent a target option for calculations in entropy
-    """
-    def __change_numerical__(self, target):
-        
-        tar_options = np.unique(target)
-        new_target = []
-        
-        assigned_nums = {}
-        i = 0
-        for options in tar_options:
-            assigned_nums[options] = i
-            i += 1
-        
-        for idx in range(0, len(target)):
-            label = target[idx]
-            new_target.append(assigned_nums[label])
-            
-        return np.array(new_target)
             
     
+    """
+    This function recursively creates nodes either decision nodes or leaf nodes
+    through the data given and the target column given to perform info_gain on
+    feautres up to the max feature count.
+    """
     def __grow_tree__(self, data, target, depth=0):
         
-        num_samples = np.shape(data)[0]     # number of data entries
-        num_options = len(np.unique(target))     # number of options in target column
+        num_samples = np.shape(data)[0]
+        num_options = len(np.unique(target))
         
         # check base case --> tree depth, pure node or splitting range less than 2
         if depth >= int(self.max_depth) or num_options == 1 or self.min_sample_split > num_samples:
             return Node(leaf_val=self.__common_label__(target))
 
-        feat_idxs = np.random.choice(len(data[0]), self.num_feats, replace=False)    # change later to getting just the best split from whole numebr of feats
+        feat_idxs = np.random.choice(len(data[0]), self.num_feats, replace=False)
         
         best_feat, best_thres_q = self.__best_split__(feat_idxs, data, target)
         
@@ -64,6 +59,10 @@ class DecisionTree:
         return Node(feature=best_feat, thres_quant=best_thres_q, left=left, right=right)
         
         
+    """ 
+    This function performs a split in the dataset to return the best split index and the 
+    threshold for that feature
+    """
     def __best_split__(self, feat_idxs, data, target):
         
         highest_gain = 0
@@ -83,7 +82,9 @@ class DecisionTree:
         
         return best_idx, best_thres
 
+    """
     
+    """
     def __info_gain__(self, data_col, target, thres):
         
         parent_entropy = self.__entropy__(target)
@@ -111,16 +112,19 @@ class DecisionTree:
         
     
     def __print_d_tree__(self, root):
-        pass
-    
-    
-    def __common_label__(self, target):
-        count = Counter(target)
-        return count.most_common(1)[0][0]
+        self.__recurse_print__(root)
         
+        
+    def __recurse_print__(self, node, level=0):
+        if node.feature is not None:
+            print(str("    " * level), node.feature)
+            self.__recurse_print__(node.left, level + 1)
+            self.__recurse_print__(node.right, level + 1)
+    
     
     def predict(self, X):
         return np.array([self._traverse_tree(x, self.root) for x in X])
+
 
     def _traverse_tree(self, x, node):
         if node.__is_leaf__():
@@ -129,3 +133,8 @@ class DecisionTree:
         if x[node.feature] <= node.thres_quant:
             return self._traverse_tree(x, node.left)
         return self._traverse_tree(x, node.right)
+        
+    
+    def __common_label__(self, target):
+        count = Counter(target)
+        return count.most_common(1)[0][0]

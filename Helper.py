@@ -24,5 +24,23 @@ def splitTrainTest(*args, splitSize):
         newData.append(test)
     return newData
         
+""" 
+This function changes the target column into binary or numerical
+indicators to represent a target option for calculations in entropy
+"""
+def __change_numerical__(target):
         
+    tar_options = np.unique(target)
+    new_target = []
         
+    assigned_nums = {}
+    i = 0
+    for options in tar_options:
+        assigned_nums[options] = i
+        i += 1
+    
+    for idx in range(0, len(target)):
+        label = target[idx]
+        new_target.append(assigned_nums[label])
+        
+    return np.array(new_target)
