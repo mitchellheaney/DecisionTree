@@ -54,9 +54,8 @@ class DecisionTree:
         num_options = len(np.unique(target))
         
         # check base case --> tree depth, pure node or splitting range less than 2
-        if depth >= int(self.max_depth) or num_options == 1 or \
-            self.min_sample_split > num_samples:
-                return Node(leaf_val=self.__common_label__(target))
+        if depth >= int(self.max_depth) or num_options == 1 or self.min_sample_split > num_samples:
+            return Node(leaf_val=self.__common_label__(target))
 
         feat_idxs = np.random.choice(len(data[0]), self.num_feats, 
             replace=False)
@@ -132,10 +131,8 @@ class DecisionTree:
         left_branch, right_branch = self.__child_split__(data_col, thres)
         
         left_len, right_len = len(left_branch), len(right_branch)
-        entropy_l, entropy_r = self.__entropy__(target[left_branch]), \
-            self.__entropy__(target[right_branch])
-        child_wa_entropy = (left_len / len(target)) * entropy_l + \
-            (right_len / len(target)) * entropy_r
+        entropy_l, entropy_r = self.__entropy__(target[left_branch]), self.__entropy__(target[right_branch])
+        child_wa_entropy = (left_len / len(target)) * entropy_l + (right_len / len(target)) * entropy_r
         
         return parent_entropy - child_wa_entropy
         

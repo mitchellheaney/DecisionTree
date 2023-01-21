@@ -25,8 +25,7 @@ def main():
         (void)
     '''
     
-    response = input("\nEnter the file name, target varaible, max depth and \
-                     number of predictive features respecively: ")
+    response = input("\nEnter the file name, target varaible, max depth and number of predictive features respecively: ")
     
     # check correct input structure
     try:
@@ -41,8 +40,7 @@ def main():
     try: 
         open(filename)
     except FileNotFoundError:
-        print('\n\t' + filename + " not found. Ensure the file is in directory\
-            and the filename matches.")
+        print('\n\t' + filename + " not found. Ensure the file is in directory and the filename matches.")
         sys.exit(0)
         
     # split data from file into respective feature data and target data
@@ -62,10 +60,8 @@ def main():
         sys.exit(0)
         
     # split data and target into train and test subsets
-    dataTrain, dataTest, targetTrain, targetTest = splitTrainTest(data, \
+    dataTrain, dataTest, targetTrain, targetTest = splitTrainTest(data, 
         target, splitSize=0.75)
-    
-    print(type(splitTrainTest(dataTrain, splitSize=0.5)))
     
     # run checks for number of feature columns in file
     numFeat = min(int(givenFeatNum), len(data[0]))
