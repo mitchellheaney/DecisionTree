@@ -1,8 +1,8 @@
 import numpy as np
 from collections import Counter
 import math
-from helper import __change_numerical__
-from node import Node
+from Helper import __change_numerical__
+from Node import Node
 
 
 class DecisionTree:
@@ -209,12 +209,12 @@ class DecisionTree:
         '''
         
         if node.feature is not None:
-            print(str("    " * level), node.feature)
+            print(str("    " * level), node.feature, " ", node.thres_quant)
             self.__recurse_print__(node.left, level + 1)
             self.__recurse_print__(node.right, level + 1)
     
     
-    def predict(self, X):
+    def __predict__(self, X):
         '''
         Uses testing data to predict outcomes of the model
         
@@ -228,10 +228,10 @@ class DecisionTree:
             (ndarray)           - array of string labels for each column 
         '''
         
-        return np.array([self._traverse_tree(x, self.root) for x in X])
+        return np.array([self.__traverse_tree__(x, self.root) for x in X])
 
 
-    def _traverse_tree(self, x, node):
+    def __traverse_tree__(self, x, node):
         '''
         Recursively traverses the tree and returns most common target label 
         for leaf nodes once reached
@@ -251,8 +251,8 @@ class DecisionTree:
             return node.leaf_val
 
         if x[node.feature] <= node.thres_quant:
-            return self._traverse_tree(x, node.left)
-        return self._traverse_tree(x, node.right)
+            return self.__traverse_tree__(x, node.left)
+        return self.__traverse_tree__(x, node.right)
         
     
     def __common_label__(self, target):

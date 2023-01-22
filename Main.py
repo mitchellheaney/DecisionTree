@@ -1,6 +1,6 @@
 import numpy as np
 from os import path
-from helper import splitTrainTest, __change_numerical__
+from Helper import splitTrainTest, __change_numerical__
 import sys
 from decision_tree import DecisionTree
 
@@ -45,6 +45,8 @@ def main():
         
     # split data from file into respective feature data and target data
     fileData = np.genfromtxt(filename, delimiter=',', dtype=str)
+    labels = fileData[0, :]
+    
     targetIdx = np.where(fileData[0] == targetVar)
     rawData = fileData[1:, :]
     
@@ -73,7 +75,7 @@ def main():
     clft.__print_d_tree__(root)
     
     # run predictive assessment with testing sets
-    predictions = clft.predict(dataTest)
+    predictions = clft.__predict__(dataTest)
     new_t_test = __change_numerical__(targetTest)
 
     acc = accuracy(new_t_test, predictions)
